@@ -16,15 +16,60 @@ urdf_filename = (
 model = pinocchio.buildModelFromUrdf(urdf_filename)
 # model = pinocchio.buildSampleModelManipulator()
 data = model.createData()
+###########
+# joints
+###########
+# universe
+# waist
+# shoulder
+# elbow
+# forearm_roll
+# wrist_angle
+# wrist_rotate
+# gripper
 
-JOINT_ID = 6
-oMdes = pinocchio.SE3(np.eye(3), np.array([0.3, 0.0, 0.2]))
+JOINT_ID = 7
+oMdes = pinocchio.SE3(np.eye(3), np.array([0.48, -0.0, 0.43]))
 
 q = pinocchio.neutral(model)
-eps = 1e-3
+eps = 3e-3
 IT_MAX = 1000
 DT = 1e-1
 damp = 1e-12
+q = [0.0, 0.0, 0., 0., 0., 0., 0., 0.]
+q = np.array(q)
+print("initial q: ", q)
+i = 0
+start = time.time()
+while True:
+    pinocchio.forwardKinematics(model, data, q)
+    iMd = data.oMi[JOINT_ID].actInv(oMdes)
+    err = pinocchio.log(iMd).vector  # in joint frame
+    if norm(err) < eps:
+        success = True
+        break
+    if i >= IT_MAX:
+        success = False
+        break
+    J = pinocchio.computeJointJacobian(model, data, q, JOINT_ID)  # in joint frame
+    J = -np.dot(pinocchio.Jlog6(iMd.inverse()), J)
+    v = -J.T.dot(solve(J.dot(J.T) + damp * np.eye(6), err))
+    q = pinocchio.integrate(model, q, v * DT)
+    if not i % 10:
+        print("%d: error = %s" % (i, err.T))
+    i += 1
+end = time.time()
+
+print("total time: ", end - start)
+if success:
+    print("Convergence achieved!")
+else:
+    print(
+        "\nWarning: the iterative algorithm has not reached convergence to the desired precision"
+    )
+
+print("\nresult: %s" % q.flatten().tolist())
+print("\nfinal error: %s" % err.T)
 
 
 # 0.3, -0.1, 0.3
@@ -36,8 +81,7 @@ damp = 1e-12
 # - wrist_angle
 # - wrist_rotate
 # - gripper
-# - left_finger
-# - right_finger
+
 # position:
 # - -0.6795535087585449
 # - -0.6089903712272644
@@ -46,9 +90,8 @@ damp = 1e-12
 # - -0.7516506314277649
 # - 1.0124273300170898
 # - 1.7073206901550293
-# - 0.06204342097043991
-# - -0.06204342097043991
 
+# result: [-0.4996292031463921, -0.4095252174014675, -0.8399677478888944, -0.918397330315649, 0.6473635793137184, 0.4034789571181939, 0.9197006531611129]
 
 # 0.3, 0.1, 0.3
 # name:
@@ -154,36 +197,3 @@ damp = 1e-12
 # - 0.6273981332778931
 # - 0.043150387704372406
 # - -0.043150387704372406
-
-print("initial q: ", q)
-i = 0
-start = time.time()
-while True:
-    pinocchio.forwardKinematics(model, data, q)
-    iMd = data.oMi[JOINT_ID].actInv(oMdes)
-    err = pinocchio.log(iMd).vector  # in joint frame
-    if norm(err) < eps:
-        success = True
-        break
-    if i >= IT_MAX:
-        success = False
-        break
-    J = pinocchio.computeJointJacobian(model, data, q, JOINT_ID)  # in joint frame
-    J = -np.dot(pinocchio.Jlog6(iMd.inverse()), J)
-    v = -J.T.dot(solve(J.dot(J.T) + damp * np.eye(6), err))
-    q = pinocchio.integrate(model, q, v * DT)
-    if not i % 10:
-        print("%d: error = %s" % (i, err.T))
-    i += 1
-end = time.time()
-
-print("total time: ", end - start)
-if success:
-    print("Convergence achieved!")
-else:
-    print(
-        "\nWarning: the iterative algorithm has not reached convergence to the desired precision"
-    )
-
-print("\nresult: %s" % q.flatten().tolist())
-print("\nfinal error: %s" % err.T)
