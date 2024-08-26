@@ -29,14 +29,15 @@ data = model.createData()
 # gripper
 
 JOINT_ID = 7
-oMdes = pinocchio.SE3(np.eye(3), np.array([0.48, -0.0, 0.43]))
+oMdes = pinocchio.SE3(np.eye(3), np.array([0.3, -0.1, 0.3]))
 
 q = pinocchio.neutral(model)
 eps = 3e-3
 IT_MAX = 1000
 DT = 1e-1
 damp = 1e-12
-q = [0.0, 0.0, 0., 0., 0., 0., 0., 0.]
+# q = [0.0, 0.0, 0., 0., 0., 0., 0., 0.]
+q = [ -0.679, -0.608, 0.967, -1.158, -0.751, 1.012, 1.707, 0.0]
 q = np.array(q)
 print("initial q: ", q)
 i = 0
