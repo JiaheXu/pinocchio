@@ -29,7 +29,7 @@ data = model.createData()
 # gripper
 
 JOINT_ID = 7
-oMdes = pinocchio.SE3(np.eye(3), np.array([0.3, 0.3, 0.3]))
+oMdes = pinocchio.SE3(np.eye(3), np.array([0.3, 0.2, 0.3]))
 
 q = pinocchio.neutral(model)
 eps = 3e-3
