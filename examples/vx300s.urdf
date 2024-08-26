@@ -220,10 +220,10 @@
     <!-- <origin rpy="0 0 0" xyz="0.005675 0 0"/> -->
     
     <!-- to ee_gripper_link (body)-->
-    <!-- <origin rpy="0 0 0" xyz="0.112875 0 0"/>  -->
+    <origin rpy="0 0 0" xyz="0.064 0 0"/> 
     
     <!-- to ee_arm_link -->
-    <origin rpy="0 0 0" xyz="0 0 0"/> 
+    <!-- <origin rpy="0 0 0" xyz="0.0 0 0"/>  -->
 
     <parent link="/ee_arm_link"/>
     <child link="/gripper_prop_link"/>
