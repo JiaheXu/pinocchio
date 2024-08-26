@@ -22,11 +22,31 @@ data = model.createData()
 # Sample a random configuration
 q = pinocchio.randomConfiguration(model)
 pi = 3.14159265
-# real robot
-q = [0.0, 0.0, 0., 0., 0., 0., 0., 0.]
+# real robot follower_right/ee_arm_link
 
-# q = [-0.4996292031463921, -0.4095252174014675, -0.8399677478888944, -0.918397330315649, 0.6473635793137184, 0.4034789571181939, 0.9197006531611129, -0.6716216949699841]
-# q = [0.7693837283790212, -0.7870014503863341, -0.855487651088164, 1.5006053995195083, 0.7718696539468464, -0.736395456551299, 0.740894256183462, -0.6716216949699841]
+#q = [0.4, 0.0, 0.0, 0., 0., 0., 0., 0.]
+#0.439, 0.184, 0.419
+
+#q = [0.0, 0.4, 0.0, 0., 0., 0., 0., 0.]
+#0.554, -0.002, 0.210
+
+#q = [0.0, 0.0, -0.1, 0., 0., 0., 0., 0.] # joint2 singal is wrong
+#0.474, -0.001, 0.380
+
+#q = [0.2, 0.0, -0.2, 0., 0., 0., 0., 0.] # joint2 singal is wrong
+#0.458, 0.091, 0.339
+
+#q = [0.0, 0.0, 0., 0.4, 0., 0., 0., 0.]
+#0.477, -0.001, 0.420
+
+#q = [0.0, 0.0, 0., 0.4, -0.4, 0., 0., 0.] # joint4 singal is wrong
+#0.467, 0.016, 0.381
+
+#q = [0.0, 0.0, 0., 0.4, -0.4, 0.4, 0., 0.]
+#0.467, 0.016, 0.381
+
+q = [0.0015, -1.8146, -1.5385, 0.0030, 1.5677, 0.0076, 1.6490, 0.0623]
+# -0.047, -0.000, 0.303
 
 q = np.array(q)
 print("q: %s" % q.T)
@@ -36,4 +56,6 @@ pinocchio.forwardKinematics(model, data, q)
 
 # Print out the placement of each joint of the kinematic tree
 for name, oMi in zip(model.names, data.oMi):
-    print(("{:<24} : {: .2f} {: .2f} {: .2f}".format(name, *oMi.translation.T.flat)))
+    print(("{:<24} : {: .4f} {: .4f} {: .4f}".format(name, *oMi.translation.T.flat)))
+#for name, oMi in zip(model.names, data.oMi):
+#    print( name, ": ", *oMi.rotation)
