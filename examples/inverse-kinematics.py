@@ -29,7 +29,7 @@ data = model.createData()
 # gripper
 
 JOINT_ID = 7
-oMdes = pinocchio.SE3(np.eye(3), np.array([0.3, 0.1, 0.3]))
+oMdes = pinocchio.SE3(np.eye(3), np.array([0.3, 0.3, 0.3]))
 
 q = pinocchio.neutral(model)
 eps = 3e-3
@@ -75,6 +75,9 @@ print("\nfinal error: %s" % err.T)
 
 # q = [-0.49599570375936863, -0.4000007133364565, 0.8353610256704259, -0.9088585096450451, -0.6476674029486584, 0.9039197817991994, 0.9941650165682081, -0.10786992088591914]
 # q = np.array(q)
+
+q[-2] = 0.
+q[-1] = 0.
 pinocchio.forwardKinematics(model, data, q)
 for name, oMi in zip(model.names, data.oMi):
     print(("{:<24} : {: .4f} {: .4f} {: .4f}".format(name, *oMi.translation.T.flat)))
