@@ -41,7 +41,7 @@ pin.loadReferenceConfigurations(model, srdf_model_path)
 
 # Retrieve the half sitting position from the SRDF file
 q = model.referenceConfigurations["half_sitting"]
-
+print("q: ", len(q))
 # Create data structures
 data = model.createData()
 geom_data = pin.GeometryData(geom_model)

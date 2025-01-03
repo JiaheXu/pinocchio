@@ -17,6 +17,14 @@ urdf_model_path =  "./spot_description/spot_arm.urdf"
 # Load model
 model = pin.buildModelFromUrdf(urdf_model_path, pin.JointModelFreeFlyer())
 
+q        = pin.randomConfiguration(model)
+print('q: %s' % q.T)
+
+
+# print("data: ", data)
+
+
+
 # Load collision geometries
 geom_model = pin.buildGeomFromUrdf(
     model, urdf_model_path, pin.GeometryType.COLLISION
